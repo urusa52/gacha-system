@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="./styles/base.css" />
   <link rel="stylesheet" href="./styles/desk.css" />
   <link rel="stylesheet" href="./styles/page.css" />
+  <link rel="stylesheet" href="./styles/library.css" />
 </head>
 <body>
   <header class="topbar">
@@ -25,6 +26,7 @@
         <span class="pity-label" id="pity-label"></span>
       </div>
       <span class="library-count" id="library-count"></span>
+      <button class="btn-library" id="btn-library"></button>
     </div>
   </header>
 
@@ -39,6 +41,17 @@
       <button id="btn-skip" class="btn-skip hidden"></button>
     </div>
   </main>
+
+  <div class="library-overlay hidden" id="library-overlay">
+    <div class="library-panel">
+      <div class="library-head">
+        <h2 id="library-title"></h2>
+        <button id="btn-library-close"></button>
+      </div>
+      <div class="library-grid" id="library-grid"></div>
+    </div>
+  </div>
+  <div class="screen-glow" id="screen-glow" aria-hidden="true"></div>
 
   <script type="module" src="./src/main.js"></script>
 </body>

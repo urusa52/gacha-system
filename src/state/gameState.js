@@ -14,7 +14,39 @@ export function createGameState(bus, config) {
     totalDraws: 0,
   };
 
+  // ── 영속화: 저장/불러오기는 이 모듈만 안다 ──
+  // localStorage가 없거나(테스트 환경) 막힌 경우(시크릿 모드)에도
+  // 게임이 죽지 않도록 전부 방어적으로 감싼다.
+  function loadSave() {
+    try {
+      const raw = globalThis.localStorage?.getItem(config.saveKey);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      // 알고 있는 필드만 골라 반영 — 오염된 세이브가 상태를 망치지 않게
+      if (typeof data.currency === "number") state.currency = data.currency;
+      if (typeof data.pity === "number") state.pity = data.pity;
+      if (Array.isArray(data.library)) state.library = data.library;
+      if (typeof data.totalDraws === "number") state.totalDraws = data.totalDraws;
+    } catch (err) {
+      console.warn("[gameState] 세이브 불러오기 실패 — 새로 시작합니다.", err);
+    }
+  }
+
+  function persist() {
+    try {
+      globalThis.localStorage?.setItem(config.saveKey, JSON.stringify({
+        currency: state.currency,
+        pity: state.pity,
+        library: state.library,
+        totalDraws: state.totalDraws,
+      }));
+    } catch { /* 저장 불가 환경 — 조용히 통과 (플레이는 계속) */ }
+  }
+
+  loadSave();
+
   function emitSnapshot() {
+    persist(); // 상태가 바뀌는 모든 순간이 emitSnapshot을 지나므로 여기서 저장
     bus.emit(EVENTS.STATE_CHANGED, snapshot());
   }
 
@@ -62,6 +94,17 @@ export function createGameState(bus, config) {
     /** 반향 획득 (서사 완성 보상 등에서 사용 예정) */
     gainCurrency(amount) {
       state.currency += amount;
+      emitSnapshot();
+    },
+
+    /** 세이브 초기화 — 디버그/설정용.
+        저장소는 항상 현재 상태의 거울이므로, 삭제가 아니라
+        초기 상태로 되돌린 뒤 그대로 덮어쓴다 (emitSnapshot이 저장까지 수행). */
+    resetAll() {
+      state.currency = config.startingCurrency;
+      state.pity = 0;
+      state.library = [];
+      state.totalDraws = 0;
       emitSnapshot();
     },
   };

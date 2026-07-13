@@ -13,6 +13,8 @@ import { createRevealStateMachine } from "./presentation/revealStateMachine.js";
 import { createPageView } from "./presentation/pageView.js";
 import { createDeskView } from "./presentation/deskView.js";
 import { createAutoRevealDriver } from "./presentation/autoRevealDriver.js";
+import { createEffectsView } from "./presentation/effectsView.js";
+import { createLibraryView } from "./presentation/libraryView.js";
 import { verifyRates } from "./dev/verifyRates.js";
 
 const bus = createEventBus();
@@ -52,6 +54,27 @@ createDeskView({
   },
 });
 
+createEffectsView({
+  bus,
+  glowEl: document.getElementById("screen-glow"),
+  guaranteeRarity: GACHA_CONFIG.pity.guarantee, // SSR
+});
+
+createLibraryView({
+  bus,
+  characters: CHARACTERS,
+  genres: GENRES,
+  rarities: GACHA_CONFIG.rarities,
+  strings: STRINGS,
+  elements: {
+    openBtn: document.getElementById("btn-library"),
+    overlay: document.getElementById("library-overlay"),
+    titleEl: document.getElementById("library-title"),
+    gridEl: document.getElementById("library-grid"),
+    closeBtn: document.getElementById("btn-library-close"),
+  },
+});
+
 // 초기 상태를 화면에 반영 (STATE_CHANGED 최초 1회 수동 발행)
 bus.emit(EVENTS.STATE_CHANGED, gameState.snapshot());
 
@@ -59,4 +82,5 @@ bus.emit(EVENTS.STATE_CHANGED, gameState.snapshot());
 window.debug = {
   state: () => gameState.snapshot(),
   verifyRates: (n = 100000) => verifyRates(GACHA_CONFIG, CHARACTERS, n),
+  resetSave: () => gameState.resetAll(), // 세이브 초기화 (심사/시연용)
 };

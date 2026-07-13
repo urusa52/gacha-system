@@ -22,4 +22,7 @@ export const GACHA_CONFIG = {
 
   // 시작 시 지급되는 반향 (데모/심사용 여유치)
   startingCurrency: 24000,
+
+  // localStorage 저장 키 — 세이브 구조가 바뀌면 버전을 올려 옛 세이브와 충돌을 막는다
+  saveKey: "unfinished-library-save-v1",
 };

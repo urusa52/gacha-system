@@ -10,4 +10,8 @@ export const STRINGS = {
   pityDescription: (n, threshold) => `언약까지 ${threshold - n}페이지`,
   notEnoughCurrency: "반향이 부족합니다. 서고가 너무 조용해요.",
   summaryTitle: "복원된 페이지",
+  libraryOpen: "서고 열람",
+  libraryTitle: (owned, total) => `서고 — ${owned}/${total} 이야기가 결말을 얻음`,
+  libraryLocked: "아직 백지로 잠든 페이지",
+  libraryClose: "닫기",
 };

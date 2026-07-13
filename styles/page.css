@@ -281,3 +281,32 @@
   60% { transform: translate(-2px, 1px); }
   80% { transform: translate(2px, -1px); }
 }
+
+/* ══ 절창(SSR) 전용 강화 연출 ══ */
+
+/* 펜이 쓰기 전, 잉크가 저항하듯 페이지가 떨린다 —
+   "이 이야기는 스스로 깨어나려 한다" */
+.page.rarity-ssr.st-completing {
+  animation: ssr-tremble 0.35s ease-in-out 3;
+  box-shadow: 0 0 22px rgba(201, 162, 75, 0.4), 0 6px 14px rgba(0, 0, 0, 0.45);
+}
+@keyframes ssr-tremble {
+  0%, 100% { transform: none; }
+  25% { transform: translate(-1.5px, 1px) rotate(-0.5deg); }
+  50% { transform: translate(1.5px, -1px) rotate(0.5deg); }
+  75% { transform: translate(-1px, -1px); }
+}
+
+/* 절창의 결말은 금빛 잉크로 쓰인다 */
+.page.rarity-ssr .completed-line {
+  color: #8a6a1e;
+  text-shadow: 0 0 6px rgba(201, 162, 75, 0.45);
+}
+
+/* 절창 복원 순간의 섬광은 더 길고 깊게 */
+.page.st-restored.rarity-ssr { animation: restore-flash-ssr 1.1s ease both; }
+@keyframes restore-flash-ssr {
+  0%   { box-shadow: 0 0 0 rgba(201, 162, 75, 0); }
+  30%  { box-shadow: 0 0 60px rgba(201, 162, 75, 0.85), 0 0 0 3px rgba(201, 162, 75, 1); }
+  100% { box-shadow: 0 0 0 2px rgba(201,162,75,0.9), 0 0 18px rgba(201,162,75,0.35), 0 6px 14px rgba(0,0,0,0.45); }
+}
