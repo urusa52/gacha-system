@@ -5,12 +5,14 @@ import { GACHA_CONFIG } from "./config/gacha.config.js";
 import { CHARACTERS } from "./config/characters.data.js";
 import { GENRES } from "./config/genres.data.js";
 import { STRINGS } from "./config/strings.ko.js";
+import { REVEAL_TIMING } from "./config/reveal.config.js";
 import { createRng } from "./core/rng.js";
 import { createGameState } from "./state/gameState.js";
 import { createGachaController } from "./input/gachaController.js";
 import { createRevealStateMachine } from "./presentation/revealStateMachine.js";
 import { createPageView } from "./presentation/pageView.js";
 import { createDeskView } from "./presentation/deskView.js";
+import { createAutoRevealDriver } from "./presentation/autoRevealDriver.js";
 import { verifyRates } from "./dev/verifyRates.js";
 
 const bus = createEventBus();
@@ -21,12 +23,14 @@ createGachaController({
   bus, gameState, config: GACHA_CONFIG, characters: CHARACTERS, rng,
 });
 createRevealStateMachine(bus);
+createAutoRevealDriver({ bus, timing: REVEAL_TIMING });
 
 createPageView({
   bus,
   container: document.getElementById("desk"),
   genres: GENRES,
   rarities: GACHA_CONFIG.rarities,
+  timing: REVEAL_TIMING,
 });
 
 createDeskView({
@@ -38,6 +42,7 @@ createDeskView({
     btnSingle: document.getElementById("btn-single"),
     btnMulti: document.getElementById("btn-multi"),
     btnSkip: document.getElementById("btn-skip"),
+    btnAuto: document.getElementById("btn-auto"),
     currencyEl: document.getElementById("currency"),
     pityFill: document.getElementById("pity-fill"),
     pityLabel: document.getElementById("pity-label"),

@@ -125,3 +125,23 @@ main {
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* 낭독(자동 진행) 버튼 — 켜져 있을 때 촛불처럼 은은히 빛난다 */
+.controls .btn-auto {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-dim);
+}
+.controls .btn-auto:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.controls .btn-auto.active {
+  color: var(--candle);
+  border-color: var(--candle);
+  background: rgba(201, 162, 75, 0.10);
+  animation: auto-glow 2s ease-in-out infinite;
+}
+@keyframes auto-glow {
+  0%, 100% { box-shadow: 0 0 0 rgba(201, 162, 75, 0); }
+  50%      { box-shadow: 0 0 12px rgba(201, 162, 75, 0.35); }
+}

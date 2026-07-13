@@ -35,6 +35,8 @@ export const EVENTS = {
   STATE_CHANGED: "state:changed",     // 상태 → 화면 (스냅샷)
   PAGE_TAPPED: "page:tapped",         // 화면 → 연출 ({ pageIndex })
   SKIP_PRESSED: "skip:pressed",       // 화면 → 연출 (속독)
+  AUTO_REVEAL_TOGGLED: "autoReveal:toggled", // 화면 → 낭독 드라이버 (켜기/끄기)
+  AUTO_REVEAL_CHANGED: "autoReveal:changed", // 낭독 드라이버 → 화면 ({ active })
   REVEAL_STARTED: "reveal:started",   // 연출 → 화면 (새 공개 시작 — 책상 청소 신호)
   PAGE_STATE_CHANGED: "page:stateChanged", // 연출 → 화면
   PAGE_ANIM_DONE: "page:animDone",    // 화면 → 연출 (펜 애니메이션 종료 알림)

@@ -4,11 +4,7 @@
 
 import { EVENTS } from "../eventBus.js";
 
-// 펜이 글자를 쓰는 속도(ms/자). 연출 튜닝은 이 상수만 조절.
-const PEN_MS_PER_CHAR = 75;
-const INK_SETTLE_MS = 500; // 문장 완성 후 잉크가 마르는 여운
-
-export function createPageView({ bus, container, genres, rarities }) {
+export function createPageView({ bus, container, genres, rarities, timing }) {
   // pageIndex → { el, typingTimer } — 진행 중 애니메이션을 취소할 수 있어야
   // 속독(즉시 RESTORED 전환) 시 잔여 타이머가 화면을 덮어쓰지 않는다.
   const pageEls = new Map();
@@ -93,9 +89,9 @@ export function createPageView({ bus, container, genres, rarities }) {
       if (pos >= text.length) {
         clearTyping(entry);
         // 잉크가 마르는 여운 뒤 "애니메이션 끝" 신호 → 머신이 RESTORED로 전이
-        setTimeout(() => bus.emit(EVENTS.PAGE_ANIM_DONE, { pageIndex }), INK_SETTLE_MS);
+        setTimeout(() => bus.emit(EVENTS.PAGE_ANIM_DONE, { pageIndex }), timing.inkSettleMs);
       }
-    }, PEN_MS_PER_CHAR);
+    }, timing.penMsPerChar);
   }
 
   function renderRestored(el, result) {

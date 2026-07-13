@@ -5,7 +5,7 @@ import { EVENTS } from "../eventBus.js";
 
 export function createDeskView({ bus, elements, config, strings }) {
   const {
-    desk, btnSingle, btnMulti, btnSkip,
+    desk, btnSingle, btnMulti, btnSkip, btnAuto,
     currencyEl, pityFill, pityLabel, libraryCountEl,
     noticeEl, summaryEl,
   } = elements;
@@ -26,12 +26,14 @@ export function createDeskView({ bus, elements, config, strings }) {
   btnSingle.innerHTML = `${strings.drawSingle}<span class="cost">${strings.currency} ${config.cost.single}</span>`;
   btnMulti.innerHTML = `${strings.drawMulti}<span class="cost">${strings.currency} ${config.cost.multi}</span>`;
   btnSkip.textContent = strings.skip;
+  btnAuto.textContent = strings.autoReveal;
   showEmptyHint();
 
   function setControls({ drawEnabled, skipVisible }) {
     btnSingle.disabled = !drawEnabled;
     btnMulti.disabled = !drawEnabled;
     btnSkip.classList.toggle("hidden", !skipVisible);
+    btnAuto.classList.toggle("hidden", !skipVisible); // 낭독도 연출 중에만 노출
   }
 
   function showNotice(msg) {
@@ -46,6 +48,13 @@ export function createDeskView({ bus, elements, config, strings }) {
     bus.emit(EVENTS.DRAW_REQUESTED, { count: config.multiDraw.count }));
   btnSkip.addEventListener("click", () =>
     bus.emit(EVENTS.SKIP_PRESSED));
+  btnAuto.addEventListener("click", () =>
+    bus.emit(EVENTS.AUTO_REVEAL_TOGGLED));
+
+  // 낭독 켜짐/꺼짐을 버튼 모양에 반영
+  bus.on(EVENTS.AUTO_REVEAL_CHANGED, ({ active }) => {
+    btnAuto.classList.toggle("active", active);
+  });
 
   // ── 이벤트 구독 → 화면 갱신 ──
 

@@ -4,6 +4,7 @@ export const STRINGS = {
   drawSingle: "한 장(張) 복원",
   drawMulti: "합본 복원",
   skip: "속독(速讀)",
+  autoReveal: "낭독(朗讀)",
   currency: "반향",
   pityLabel: "사서의 언약",
   pityDescription: (n, threshold) => `언약까지 ${threshold - n}페이지`,
