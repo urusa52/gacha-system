@@ -1,0 +1,283 @@
+/* page.css — 페이지 카드의 모든 시각 상태.
+   상태 클래스(st-faded/st-broken/st-completing/st-restored)는
+   revealStateMachine의 상태와 1:1 대응하며 pageView가 붙인다. */
+
+.page {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--paper);
+  box-shadow:
+    0 1px 0 var(--paper-shadow) inset,
+    0 6px 14px rgba(0, 0, 0, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  animation: page-land 0.45s ease both; /* 책상에 툭 놓이는 등장 */
+}
+.page:hover { transform: translateY(-3px); }
+
+@keyframes page-land {
+  from { opacity: 0; transform: translateY(-14px) rotate(0.8deg); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* 여러 장이 깔릴 때 순차 등장 (deskView가 --i 변수 부여) */
+.page { animation-delay: calc(var(--i, 0) * 70ms); }
+
+/* ══ 1. FADED — 바랜 백지 + 잉크 얼룩(생기 = 등급 티징) ══ */
+
+/* 바랜 글줄 흔적: 거의 안 보이는 줄들 */
+.page .ghost-lines {
+  position: absolute;
+  inset: 14% 12% auto;
+  height: 40%;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(58, 50, 38, 0.06) 0 2px,
+    transparent 2px 14px
+  );
+  pointer-events: none;
+}
+
+.page .stain {
+  position: absolute;
+  left: 50%; top: 58%;
+  width: 46%; aspect-ratio: 1.4;
+  transform: translate(-50%, -50%);
+  border-radius: 54% 46% 60% 40% / 50% 55% 45% 50%; /* 유기적 얼룩 형태 */
+  pointer-events: none;
+}
+
+/* 단편(R): 거의 죽은 잿빛 얼룩 */
+.vitality-faded .stain {
+  background: radial-gradient(circle at 45% 40%, rgba(139, 133, 120, 0.30), rgba(139, 133, 120, 0.06) 70%);
+}
+
+/* 일화(SR): 은은히 숨 쉬는 은빛 얼룩 */
+.vitality-breathing .stain {
+  background: radial-gradient(circle at 45% 40%, rgba(154, 164, 178, 0.42), rgba(154, 164, 178, 0.08) 70%);
+  animation: stain-breathe 3.2s ease-in-out infinite;
+}
+@keyframes stain-breathe {
+  0%, 100% { opacity: 0.65; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.06); }
+}
+
+/* 절창(SSR): 살아 꿈틀거리는 금빛 잉크 — 이 페이지의 이야기는 죽지 않았다 */
+.vitality-living .stain {
+  background: radial-gradient(circle at 45% 40%, rgba(201, 162, 75, 0.55), rgba(201, 162, 75, 0.10) 72%);
+  animation: stain-alive 2.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(201, 162, 75, 0.35));
+}
+@keyframes stain-alive {
+  0%, 100% { border-radius: 54% 46% 60% 40% / 50% 55% 45% 50%; transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  33%      { border-radius: 46% 54% 42% 58% / 58% 44% 56% 42%; transform: translate(-52%, -49%) rotate(2deg) scale(1.05); }
+  66%      { border-radius: 60% 40% 55% 45% / 45% 60% 40% 55%; transform: translate(-48%, -51%) rotate(-2deg) scale(1.03); }
+}
+
+/* ══ 2. BROKEN — 장르의 종이가 드러나고 끊긴 문장이 나타난다 ══ */
+
+.page.st-broken .stain, .page.st-broken .ghost-lines { display: none; }
+
+.page .sentence-area {
+  position: absolute;
+  inset: 0;
+  padding: 16% 12%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.page .genre-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: color-mix(in srgb, var(--page-ink, var(--ink)) 55%, transparent);
+  animation: fade-in 0.6s ease both;
+}
+
+.page .broken-sentence {
+  font-size: clamp(0.78rem, 1.6vw, 0.95rem);
+  line-height: 1.9;
+  color: var(--page-ink, var(--ink));
+  word-break: keep-all;
+  animation: ink-appear 0.8s ease both 0.15s;
+}
+/* 끊긴 지점의 '—'는 미완을 강조하며 깜빡인다 */
+.page .broken-sentence .cut-mark {
+  animation: cut-blink 1.4s ease-in-out infinite;
+}
+@keyframes ink-appear {
+  from { opacity: 0; filter: blur(3px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+@keyframes cut-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ══ 장르별 종이 질감 (genres.data.js의 paperTexture와 매핑) ══ */
+
+.texture-hanji {
+  background:
+    repeating-linear-gradient(90deg, rgba(58,50,38,0.05) 0 1px, transparent 1px 9px),
+    #f2ecdc;
+}
+.texture-print-glitch {
+  background:
+    repeating-linear-gradient(0deg, rgba(30,58,76,0.06) 0 1px, transparent 1px 5px),
+    #eef0ee;
+}
+.texture-screentone {
+  background:
+    radial-gradient(rgba(92,46,82,0.12) 1px, transparent 1.5px),
+    #f6eef4;
+  background-size: 7px 7px, auto;
+}
+.texture-aged-report {
+  background:
+    linear-gradient(rgba(120,100,60,0.10), transparent 30%),
+    repeating-linear-gradient(to bottom, transparent 0 18px, rgba(38,40,46,0.07) 18px 19px),
+    #efe5c8;
+}
+.texture-letter {
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 20px, rgba(110,59,68,0.14) 20px 21px),
+    #f7efe4;
+}
+.texture-parchment {
+  background:
+    radial-gradient(ellipse at 20% 25%, rgba(90,75,40,0.10), transparent 55%),
+    radial-gradient(ellipse at 80% 75%, rgba(90,75,40,0.12), transparent 50%),
+    #ede2c4;
+}
+
+/* ══ 3. COMPLETING — 사서의 펜이 결말을 이어 쓴다 ══ */
+
+.page.st-completing { cursor: default; }
+
+/* 이어 쓰는 글줄은 손글씨(펜) 서체 — 사서가 직접 쓰는 것 */
+.page .completed-line {
+  font-family: var(--font-pen);
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  color: var(--page-ink, var(--ink));
+  min-height: 1.6em;
+  word-break: keep-all;
+}
+/* 깜빡이는 펜촉 커서 */
+.page.st-completing .completed-line::after {
+  content: "";
+  display: inline-block;
+  width: 2px; height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--page-ink, var(--ink));
+  animation: cut-blink 0.7s steps(1) infinite;
+}
+
+/* ══ 4. RESTORED — 복원 완료: 일러스트 + 이름 + 완성된 문장 ══ */
+
+.page.st-restored {
+  cursor: default;
+  animation: restore-flash 0.7s ease both;
+}
+@keyframes restore-flash {
+  0%   { box-shadow: 0 0 0 rgba(201,162,75,0); }
+  35%  { box-shadow: 0 0 34px rgba(201,162,75,0.55); }
+  100% { box-shadow: 0 1px 0 var(--paper-shadow) inset, 0 6px 14px rgba(0,0,0,0.45); }
+}
+
+.page .restored-layout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  animation: fade-in 0.5s ease both;
+}
+
+/* 일러스트 슬롯: image가 있으면 <img>, 없으면 CSS 실루엣 */
+.page .portrait {
+  flex: 1.3;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(58, 50, 38, 0.15);
+}
+.page .portrait img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* 실루엣 플레이스홀더: 잉크로 그린 사람 형상 */
+.page .portrait .silhouette {
+  position: absolute;
+  left: 50%; bottom: -8%;
+  width: 52%; aspect-ratio: 0.8;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(circle at 50% 18%, var(--page-ink, var(--ink)) 13%, transparent 14%),
+    radial-gradient(ellipse 50% 42% at 50% 78%, var(--page-ink, var(--ink)) 96%, transparent 100%);
+  opacity: 0.75;
+  filter: blur(0.4px);
+}
+
+.page .restored-info {
+  flex: 1;
+  padding: 8px 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.page .char-name {
+  font-size: clamp(0.85rem, 1.8vw, 1rem);
+  font-weight: 600;
+  color: var(--page-ink, var(--ink));
+}
+.page .full-sentence {
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--page-ink, var(--ink)) 75%, transparent);
+  word-break: keep-all;
+  flex: 1;
+}
+.page .rarity-chip {
+  align-self: flex-start;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+}
+
+/* 등급별 색과 테 — 절창은 금빛으로 타오른다 */
+.page.rarity-r   .rarity-chip { color: #6f6a5e; }
+.page.rarity-sr  .rarity-chip { color: #5d6b80; }
+.page.rarity-ssr .rarity-chip { color: #8a6a1e; }
+
+.page.st-restored.rarity-sr  { box-shadow: 0 0 0 1px rgba(154,164,178,0.7), 0 6px 14px rgba(0,0,0,0.45); }
+.page.st-restored.rarity-ssr {
+  box-shadow: 0 0 0 2px rgba(201,162,75,0.9), 0 0 18px rgba(201,162,75,0.35), 0 6px 14px rgba(0,0,0,0.45);
+}
+
+/* 합본 보장으로 승격된 페이지 표시 */
+.page .promoted-badge {
+  position: absolute;
+  top: 6px; right: 6px;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: var(--candle);
+  border: 1px solid rgba(201,162,75,0.5);
+  border-radius: 3px;
+  padding: 1px 6px;
+  background: rgba(23, 20, 15, 0.75);
+}
+
+/* ══ 캐릭터 전용 연출 프리셋 (characters.data.js의 revealPreset과 매핑) ══
+   예: revealPreset: "storm" → 복원 순간 페이지가 크게 진동.
+   새 프리셋은 여기에 .preset-이름 규칙만 추가하면 된다. */
+.page.st-restored.preset-storm { animation: restore-flash 0.7s ease both, preset-storm-shake 0.5s ease 0.1s; }
+@keyframes preset-storm-shake {
+  0%, 100% { transform: none; }
+  20% { transform: translate(-3px, 1px) rotate(-1deg); }
+  40% { transform: translate(3px, -1px) rotate(1deg); }
+  60% { transform: translate(-2px, 1px); }
+  80% { transform: translate(2px, -1px); }
+}

@@ -56,6 +56,10 @@ export function createRevealStateMachine(bus) {
   // 새 복원 결과가 확정되면 페이지들을 FADED로 깔아놓는다.
   bus.on(EVENTS.DRAW_RESOLVED, ({ results }) => {
     revealActive = true;
+    // 페이지 상태를 깔기 전에 "새 공개 시작"을 먼저 알린다.
+    // View들의 청소가 반드시 초기 상태 수신보다 앞서게 하기 위함 —
+    // 같은 이벤트에 대한 구독 순서에 의존하지 않는 명시적 순서 보장.
+    bus.emit(EVENTS.REVEAL_STARTED, { count: results.length });
     pages = results.map((result, index) => ({
       index,
       result,

@@ -1,0 +1,112 @@
+/* base.css — 디자인 토큰과 공통 레이아웃.
+   컨셉: "서고의 밤" — 촛불 하나 켜진 낡은 서고의 책상. */
+
+:root {
+  /* 색 토큰 — 화면 전체가 이 팔레트만 사용한다 */
+  --bg: #17140f;            /* 서고의 어둠 */
+  --bg-warm: #211b12;       /* 촛불이 닿는 언저리 */
+  --desk: #2b2216;          /* 책상 나무 */
+  --paper: #f0e7d3;         /* 페이지 종이 */
+  --paper-shadow: #d9cdb2;
+  --ink: #3a3226;           /* 기본 잉크 */
+  --candle: #c9a24b;        /* 촛불 금색 (SSR/강조) */
+  --silver: #9aa4b2;        /* 은빛 (SR) */
+  --ash: #8b8578;           /* 잿빛 (R) */
+  --text-light: #e9e1cf;
+  --text-dim: #a89d87;
+  --danger: #b2543f;
+
+  --font-serif: "Noto Serif KR", serif;
+  --font-pen: "Nanum Pen Script", cursive; /* 사서의 펜 글씨 */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font-serif);
+  color: var(--text-light);
+  /* 촛불의 빛무리: 화면 중앙 상단이 은은히 밝다 */
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%, var(--bg-warm), transparent 70%),
+    var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px 40px;
+}
+
+/* ── 상단: 제목과 사서의 장부 ── */
+.topbar {
+  width: 100%;
+  max-width: 960px;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.topbar h1 {
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: 0.35em;
+  text-indent: 0.35em; /* letter-spacing으로 어긋난 중앙 보정 */
+  color: var(--text-light);
+}
+
+.topbar .subtitle {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+.meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 14px;
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.meta .currency { color: var(--candle); }
+.meta .library-count { color: var(--text-dim); }
+
+/* 사서의 언약 게이지 */
+.pity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pity .pity-track {
+  width: 140px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.pity .pity-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #7a6537, var(--candle));
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+.pity .pity-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.notice {
+  min-height: 1.4em;
+  font-size: 0.85rem;
+  color: var(--danger);
+  text-align: center;
+  margin-bottom: 8px;
+  transition: opacity 0.3s;
+}
+
+.hidden { display: none !important; }

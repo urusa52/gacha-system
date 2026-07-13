@@ -1,0 +1,127 @@
+/* desk.css — 책상(페이지 배치판), 복원 버튼, 요약 표시. */
+
+main {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+/* ── 책상: 페이지들이 놓이는 곳 ── */
+.desk {
+  width: 100%;
+  min-height: 320px;
+  padding: 22px;
+  border-radius: 10px;
+  /* 나뭇결: 미세한 세로 줄 + 가장자리 어둡게 */
+  background:
+    repeating-linear-gradient(95deg, rgba(0,0,0,0.10) 0 2px, transparent 2px 26px),
+    radial-gradient(ellipse 120% 100% at 50% 0%, rgba(255,255,255,0.03), transparent 60%),
+    var(--desk);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  align-content: center;
+  justify-items: center;
+}
+
+/* 페이지가 1장뿐일 때(단차)는 중앙에 크게 */
+.desk.single {
+  grid-template-columns: minmax(220px, 300px);
+  justify-content: center;
+}
+
+/* 빈 책상 안내 */
+.desk .empty-hint {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 2;
+  letter-spacing: 0.05em;
+}
+.desk .empty-hint .pen-mark {
+  font-family: var(--font-pen);
+  font-size: 1.5rem;
+  color: var(--candle);
+  display: block;
+}
+
+/* ── 복원 버튼들 ── */
+.controls {
+  display: flex;
+  gap: 14px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.controls button {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+  background: transparent;
+  border: 1px solid rgba(201, 162, 75, 0.45);
+  border-radius: 6px;
+  padding: 12px 26px;
+  cursor: pointer;
+  transition: background 0.25s, border-color 0.25s, transform 0.1s;
+}
+.controls button .cost {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--candle);
+  margin-top: 3px;
+  letter-spacing: 0.05em;
+}
+.controls button:hover:not(:disabled) {
+  background: rgba(201, 162, 75, 0.12);
+  border-color: var(--candle);
+}
+.controls button:active:not(:disabled) { transform: translateY(1px); }
+.controls button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* 속독은 조용한 보조 동작 — 시각적 무게를 낮춘다 */
+.controls .btn-skip {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-dim);
+}
+.controls .btn-skip:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ── 복원 요약 ── */
+.summary {
+  margin-top: 18px;
+  padding: 10px 22px;
+  border: 1px solid rgba(201, 162, 75, 0.3);
+  border-radius: 6px;
+  background: rgba(201, 162, 75, 0.07);
+  font-size: 0.9rem;
+  color: var(--text-light);
+  text-align: center;
+  animation: summary-in 0.5s ease both;
+}
+.summary .best { color: var(--candle); }
+
+@keyframes summary-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (max-width: 640px) {
+  .desk { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; padding: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

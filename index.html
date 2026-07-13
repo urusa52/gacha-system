@@ -4,21 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>미완(未完)의 서고</title>
-  <style>
-    /* 1단계 임시 화면 — 본 UI는 3단계에서 교체 */
-    body { font-family: sans-serif; max-width: 640px; margin: 48px auto; padding: 0 16px; line-height: 1.7; color: #333; }
-    code { background: #f2f0ea; padding: 2px 6px; border-radius: 4px; }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Nanum+Pen+Script&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="./styles/base.css" />
+  <link rel="stylesheet" href="./styles/desk.css" />
+  <link rel="stylesheet" href="./styles/page.css" />
 </head>
 <body>
-  <h1>미완(未完)의 서고</h1>
-  <p>1단계 뼈대가 실행 중입니다. 브라우저 <b>개발자 콘솔(F12)</b>을 열고 아래 명령을 입력해 보세요.</p>
-  <ul>
-    <li><code>debug.drawSingle()</code> — 한 장(張) 복원</li>
-    <li><code>debug.drawMulti()</code> — 합본 복원 (10장)</li>
-    <li><code>debug.state()</code> — 현재 반향·언약·서고 상태</li>
-    <li><code>debug.verifyRates(100000)</code> — 확률 검증 시뮬레이션</li>
-  </ul>
+  <header class="topbar">
+    <h1>미완(未完)의 서고</h1>
+    <p class="subtitle">결말을 갖지 못한 이야기들이 잠든 곳</p>
+    <div class="meta">
+      <span class="currency" id="currency"></span>
+      <div class="pity">
+        <div class="pity-track"><div class="pity-fill" id="pity-fill"></div></div>
+        <span class="pity-label" id="pity-label"></span>
+      </div>
+      <span class="library-count" id="library-count"></span>
+    </div>
+  </header>
+
+  <main>
+    <p class="notice" id="notice"></p>
+    <section class="desk" id="desk" aria-label="복원 책상"></section>
+    <div class="summary hidden" id="summary" role="status"></div>
+    <div class="controls">
+      <button id="btn-single"></button>
+      <button id="btn-multi"></button>
+      <button id="btn-skip" class="btn-skip hidden"></button>
+    </div>
+  </main>
+
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>
