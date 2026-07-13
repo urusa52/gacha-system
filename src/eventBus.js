@@ -36,5 +36,6 @@ export const EVENTS = {
   PAGE_TAPPED: "page:tapped",         // 화면 → 연출 ({ pageIndex })
   SKIP_PRESSED: "skip:pressed",       // 화면 → 연출 (속독)
   PAGE_STATE_CHANGED: "page:stateChanged", // 연출 → 화면
+  PAGE_ANIM_DONE: "page:animDone",    // 화면 → 연출 (펜 애니메이션 종료 알림)
   REVEAL_ALL_DONE: "reveal:allDone",  // 연출 → 화면/상태
 };
